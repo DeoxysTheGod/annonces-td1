@@ -20,5 +20,7 @@ class ViewAnnonces extends View
         $this->content = "<p> Hello $login </p>";
 
         $this->content .= $presenter->getAllAnnoncesHTML();
+
+		$this->content .= '<a href="/annonces/index.php/createAnnonce">Créer une annonce</a>';
     }
 }

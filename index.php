@@ -11,6 +11,7 @@ include_once 'control/Presenter.php';
 
 include_once 'service/AnnoncesChecking.php';
 include_once 'service/UserChecking.php';
+include_once 'service/AnnonceCreation.php';
 
 include_once 'gui/Layout.php';
 include_once 'gui/ViewLogin.php';
@@ -21,11 +22,12 @@ include_once 'gui/ViewAnnoncesAlternance.php';
 include_once 'gui/ViewCompanyAlternance.php';
 include_once 'gui/ViewAnnoncesEmploi.php';
 include_once 'gui/ViewOffreEmploi.php';
+include_once 'gui/ViewCreateAnnonce.php';
 
-use gui\{ViewLogin, ViewAnnonces, ViewPost, ViewError, ViewAnnoncesAlternance, ViewCompanyAlternance, ViewAnnoncesEmploi, ViewOffreEmploi, Layout};
+use gui\{ViewLogin, ViewAnnonces, ViewPost, ViewError, ViewAnnoncesAlternance, ViewCompanyAlternance, ViewAnnoncesEmploi, ViewOffreEmploi, ViewCreateAnnonce, Layout};
 use control\{Controllers, Presenter};
 use data\{AnnonceSqlAccess, UserSqlAccess, ApiAlternance, ApiEmploi};
-use service\{AnnoncesChecking, UserChecking};
+use service\{AnnoncesChecking, UserChecking, AnnonceCreation};
 
 $data = null;
 try {
@@ -47,6 +49,8 @@ $controller = new Controllers();
 
 // intialisation du cas d'utilisation service\AnnoncesChecking
 $annoncesCheck = new AnnoncesChecking() ;
+
+$annonceCreation = new AnnonceCreation();
 
 // intialisation du cas d'utilisation service\UserChecking
 $userCheck = new UserChecking() ;
@@ -89,6 +93,9 @@ if ( '/annonces/' == $uri || '/annonces/index.php' == $uri || '/annonces/index.p
 }
 elseif ( '/annonces/index.php/annonces' == $uri ){
 	// affichage de toutes les annonces
+	if ( isset($_POST['contractType']) ) {
+		$controller->annonceCreationAction($_SESSION['login'], $_POST, $dataAnnonces, $annonceCreation);
+	}
 
 	$controller->annoncesAction($dataAnnonces, $annoncesCheck);
 
@@ -157,6 +164,14 @@ elseif ( '/annonces/index.php/offreEmploi' == $uri
 	$vuePostEmploi = new ViewOffreEmploi( $layout,  $_SESSION['login'], $presenter );
 
 	$vuePostEmploi->display();
+}
+elseif ('/annonces/index.php/createAnnonce' == $uri) {
+	// Affichage du formulaire de création d'annonce
+
+	$layout = new Layout("gui/layoutLogged.html" );
+	$vueCreateAnnonce = new ViewCreateAnnonce( $layout );
+
+	$vueCreateAnnonce->display();
 }
 else {
 	header('Status: 404 Not Found');
