@@ -1,10 +1,8 @@
 <?php
 
 namespace service;
-interface DataAccessInterface
+interface AnnonceAccessInterface
 {
-    public function getUser($login, $password);
-
     public function getAllAnnonces();
 
     public function getPost($id);

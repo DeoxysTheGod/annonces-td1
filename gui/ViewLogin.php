@@ -9,7 +9,7 @@ class ViewLogin extends View
     {
         parent::__construct($layout);
 
-        $this->title = 'Exemple Annonces Basic PHP: Connexion';
+        $this->title = 'Connexion';
 
         $this->content = '
             <form method="post" action="/annonces/index.php/annonces">

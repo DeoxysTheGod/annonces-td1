@@ -1,6 +1,7 @@
 <?php
 
 namespace service;
+
 class AnnoncesChecking
 {
     protected $annoncesTxt;
@@ -10,16 +11,11 @@ class AnnoncesChecking
         return $this->annoncesTxt;
     }
 
-    public function authenticate($login, $password, $data)
-    {
-        return ($data->getUser($login, $password) != null);
-    }
-
     public function getAllAnnonces($data)
     {
-        $annonces = $data->getAllAnnonces();
+		$annonces = $data->getAllAnnonces();
 
-        $this->annoncesTxt = array();
+		$this->annoncesTxt = array();
         foreach ($annonces as $post) {
             $this->annoncesTxt[] = ['id' => $post->getId(), 'title' => $post->getTitle(), 'body' => $post->getBody(), 'date' => $post->getDate()];
         }

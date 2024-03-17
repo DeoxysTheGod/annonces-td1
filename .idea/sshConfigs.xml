@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="archilog@ssh-archilog.alwaysdata.net" id="47517851-be5c-4c66-a638-0edf29f55177" port="22" nameFormat="DESCRIPTIVE" username="archilog" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>

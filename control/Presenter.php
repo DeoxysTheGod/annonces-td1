@@ -36,4 +36,14 @@ class Presenter
         }
         return $content;
     }
+
+	public function getCurrentPostTitle()
+	{
+		$content = null;
+		if ($this->annoncesCheck->getAnnoncesTxt() != null) {
+			$post = $this->annoncesCheck->getAnnoncesTxt()[0];
+			$content = $post['title'];
+		}
+		return $content;
+	}
 }
