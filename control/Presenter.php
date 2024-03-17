@@ -53,7 +53,7 @@ class Presenter
 			$content = '<h1>List of Posts</h1>  <ul>';
 			foreach ($this->annoncesCheck->getAnnoncesTxt() as $post) {
 				$content .= ' <li>';
-				$content .= '<a href="/annonces/index.php/annoncesAlternance?id=' . $post['id'] . '">' . $post['title'] . '</a>';
+				$content .= '<a href="/annonces/index.php/companyAlternance?id=' . $post['id'] . '">' . $post['title'] . '</a>';
 				$content .= ' </li>';
 			}
 			$content .= '</ul>';

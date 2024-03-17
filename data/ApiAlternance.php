@@ -44,18 +44,19 @@ class ApiAlternance implements AnnonceAccessInterface
 
 		// transformation du JSON récupéré en tableau associatif
 		$response = json_decode( $response, true );
-		var_dump($response['peJobs']['results']);
 		// parcours du tableau associatif pour extraire les
 		// entreprises à fort potentiel de recrutement en alternance dans la région d'Aix
 		$annonces = array();
+		$cpt = 0;
 		foreach ( $response['peJobs']['results'] as $entreprise){
-
-			$id = $entreprise['company']['siret'];
+			$id = $cpt;
 			$title = $entreprise['title'];
-			$body = $entreprise['nafs'][0]['label'].'; '.$entreprise['contact']['email'].'; '.$entreprise['place']['fullAddress'];
+			if (isset($entreprise['place']['fullAddress']) && isset($entreprise['contact']['email']) && isset($entreprise['nafs'][0]['label']))
+				$body = $entreprise['nafs'][0]['label'].'; '.$entreprise['contact']['email'].'; '.$entreprise['place']['fullAddress'];
 
 			$currentPost = new Post($id, $title, $body, date("Y-m-d H:i:s") );
 			$annonces[$id] = $currentPost;
+			$cpt++;
 		}
 
 		// enregistrement des annonces dans un fichier sur le serveur (serialisation)
