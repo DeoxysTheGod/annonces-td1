@@ -4,6 +4,7 @@
 include_once 'data/AnnonceSqlAccess.php';
 include_once 'data/UserSqlAccess.php';
 include_once 'data/ApiAlternance.php';
+include_once 'data/ApiEmploi.php';
 
 include_once 'control/Controllers.php';
 include_once 'control/Presenter.php';
@@ -18,10 +19,12 @@ include_once 'gui/ViewPost.php';
 include_once 'gui/ViewError.php';
 include_once 'gui/ViewAnnoncesAlternance.php';
 include_once 'gui/ViewCompanyAlternance.php';
+include_once 'gui/ViewAnnoncesEmploi.php';
+include_once 'gui/ViewOffreEmploi.php';
 
-use gui\{ViewLogin, ViewAnnonces, ViewPost, ViewError, ViewAnnoncesAlternance, ViewCompanyAlternance, Layout};
+use gui\{ViewLogin, ViewAnnonces, ViewPost, ViewError, ViewAnnoncesAlternance, ViewCompanyAlternance, ViewAnnoncesEmploi, ViewOffreEmploi, Layout};
 use control\{Controllers, Presenter};
-use data\{AnnonceSqlAccess, UserSqlAccess, ApiAlternance};
+use data\{AnnonceSqlAccess, UserSqlAccess, ApiAlternance, ApiEmploi};
 use service\{AnnoncesChecking, UserChecking};
 
 $data = null;
@@ -31,6 +34,7 @@ try {
 	$dataAnnonces = new AnnonceSqlAccess($bd);
 	$dataUsers = new UserSqlAccess($bd);
 	$apiAlternance = new ApiAlternance();
+	$apiEmploi = new ApiEmploi();
 
 
 } catch (PDOException $e) {
@@ -133,8 +137,27 @@ elseif ( '/annonces/index.php/companyAlternance' == $uri
 
 	$vuePostAlternance->display();
 }
+elseif ( '/annonces/index.php/annoncesEmploi' == $uri ){
+	// Déconnexion
 
+	$controller->annoncesAction($apiEmploi, $annoncesCheck);
 
+	$layout = new Layout("gui/layoutLogged.html" );
+	$vueAnnoncesEmploi = new ViewAnnoncesEmploi( $layout, $_SESSION['login'], $presenter);
+
+	$vueAnnoncesEmploi->display();
+}
+elseif ( '/annonces/index.php/offreEmploi' == $uri
+	&& isset($_GET['id'])) {
+	// Affichage d'une offre d'emploi
+
+	$controller->postAction($_GET['id'], $apiEmploi, $annoncesCheck);
+
+	$layout = new Layout("gui/layoutLogged.html" );
+	$vuePostEmploi = new ViewOffreEmploi( $layout,  $_SESSION['login'], $presenter );
+
+	$vuePostEmploi->display();
+}
 else {
 	header('Status: 404 Not Found');
 	echo '<html><body><h1>My Page NotFound</h1></body></html>';
