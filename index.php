@@ -3,6 +3,7 @@
 // charge et initialise les bibliothèques globales
 include_once 'data/AnnonceSqlAccess.php';
 include_once 'data/UserSqlAccess.php';
+include_once 'data/ApiAlternance.php';
 
 include_once 'control/Controllers.php';
 include_once 'control/Presenter.php';
@@ -15,10 +16,12 @@ include_once 'gui/ViewLogin.php';
 include_once 'gui/ViewAnnonces.php';
 include_once 'gui/ViewPost.php';
 include_once 'gui/ViewError.php';
+include_once 'gui/ViewAnnoncesAlternance.php';
+include_once 'gui/ViewCompanyAlternance.php';
 
-use gui\{ViewLogin, ViewAnnonces, ViewPost, ViewError, Layout};
+use gui\{ViewLogin, ViewAnnonces, ViewPost, ViewError, ViewAnnoncesAlternance, ViewCompanyAlternance, Layout};
 use control\{Controllers, Presenter};
-use data\{AnnonceSqlAccess, UserSqlAccess};
+use data\{AnnonceSqlAccess, UserSqlAccess, ApiAlternance};
 use service\{AnnoncesChecking, UserChecking};
 
 $data = null;
@@ -27,6 +30,8 @@ try {
 	// construction du modèle
 	$dataAnnonces = new AnnonceSqlAccess($bd);
 	$dataUsers = new UserSqlAccess($bd);
+	$apiAlternance = new ApiAlternance();
+
 
 } catch (PDOException $e) {
 	print "Erreur de connexion !: " . $e->getMessage() . "<br/>";
@@ -83,7 +88,7 @@ elseif ( '/annonces/index.php/annonces' == $uri ){
 
 	$controller->annoncesAction($dataAnnonces, $annoncesCheck);
 
-	$layout = new Layout("gui/layout.html" );
+	$layout = new Layout("gui/layoutLogged.html" );
 	$vueAnnonces= new ViewAnnonces( $layout,  $_SESSION['login'], $presenter);
 
 	$vueAnnonces->display();
@@ -94,7 +99,7 @@ elseif ( '/annonces/index.php/post' == $uri
 
 	$controller->postAction($_GET['id'], $dataAnnonces, $annoncesCheck);
 
-	$layout = new Layout("gui/layout.html" );
+	$layout = new Layout("gui/layoutLogged.html" );
 	$vuePost= new ViewPost( $layout,  $_SESSION['login'], $presenter );
 
 	$vuePost->display();
@@ -107,6 +112,29 @@ elseif ( '/annonces/index.php/error' == $uri ){
 
 	$vueError->display();
 }
+elseif ( '/annonces/index.php/annoncesAlternance' == $uri ){
+	// Affichage de toutes les entreprises offrant de l'alternance
+
+	$controller->annoncesAction($apiAlternance, $annoncesCheck);
+
+	$layout = new Layout("gui/layoutLogged.html" );
+	$vueAnnoncesAlternance= new ViewAnnoncesAlternance( $layout,  $_SESSION['login'], $presenter);
+
+	$vueAnnoncesAlternance->display();
+}
+elseif ( '/annonces/index.php/companyAlternance' == $uri
+	&& isset($_GET['id'])) {
+	// Affichage d'une entreprise offrant de l'alternance
+
+	$controller->postAction($_GET['id'], $apiAlternance, $annoncesCheck);
+
+	$layout = new Layout("gui/layoutLogged.html" );
+	$vuePostAlternance = new ViewCompanyAlternance( $layout,  $_SESSION['login'], $presenter );
+
+	$vuePostAlternance->display();
+}
+
+
 else {
 	header('Status: 404 Not Found');
 	echo '<html><body><h1>My Page NotFound</h1></body></html>';
